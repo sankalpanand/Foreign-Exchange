@@ -1,0 +1,56 @@
+-----------------------------------------------------------------------------------------
+INPUT FORMAT
+-----------------------------------------------------------------------------------------
+PairName,
+TimeStamp,
+BidPrice,
+AskPrice
+
+-----------------------------------------------------------------------------------------
+OUTPUT FORMAT
+-----------------------------------------------------------------------------------------
+PairName,
+TimeStamp,
+Max Bid Price within one minute interval,
+Min Bid Price within one minute interval,
+Average Bid Price within one minute interval,
+Max Ask Price within one minute interval,
+Min Ask Price within one minute interval,
+Average Ask Price within one minute interval,
+Max Spread  within one minute interval,
+Min Spread  within one minute interval,
+Average Spread  within one minute interval,
+BidDirection,
+AskDirection
+
+WHERE
+Delta = Asking Price - Bidding Price
+
+Sample value:
+EUR/USD,20140101 21:56:03.117,1.37624,1.37616,1.3762,1.37698,1.37693,1.37696,.0008,.00071,.00076,1,0
+
+-----------------------------------------------------------------------------------------
+Features which are newly added
+-----------------------------------------------------------------------------------------
+Max Bid Price within one minute interval,
+Min Bid Price within one minute interval,
+Average Bid Price within one minute interval,
+Max Ask Price within one minute interval,
+Min Ask Price within one minute interval,
+Average Ask Price within one minute interval,
+Max Spread  within one minute interval,
+Min Spread  within one minute interval,
+Average Spread  within one minute interval,
+
+-----------------------------------------------------------------------------------------
+Labels I'll trying to predict
+-----------------------------------------------------------------------------------------
+Bid Direction	
+Ask Direction
+
+-----------------------------------------------------------------------------------------
+Analysis
+-----------------------------------------------------------------------------------------
+I have chose to predict EUR-USD currency pair. I'll try to predict the ask and bid price movement in the future. Right now I am given only Ask and Bid Prices for each transaction that happened. Since, the matrix will be very sparse if the instance data is for every second, I will take into account the instances having data of every minute. This will make my matrix dense. In order not to loose information, I am taking Maximum, Minimum and Average bidding and asking price of every one minute interval. I am also calculating the spread or the delta between the asking price and bidding price. It could also reveal some trend which could be helpful in predicting the values. I am representing the directions by integers - 1 and 0. 1 is when the average price goes up from the previous interval and 0 is when the average price goes down from the previous one minute interval.
+
+
