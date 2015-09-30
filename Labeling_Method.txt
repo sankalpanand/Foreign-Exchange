@@ -56,7 +56,16 @@ Right now I am given only Ask and Bid Prices for each transaction that happened.
 Since, the matrix will be very sparse if the instance data is for every second, I will take into account the instances having data of every minute. 
 This will make my matrix dense. In order not to loose information, I am taking Maximum, Minimum and Average bidding and asking price of every one minute interval. 
 I am also calculating the spread or the delta between the asking price and bidding price. It could also reveal some trend which could be helpful in predicting the labels. 
-I am representing the movement of the label by integers - 1 and 0. 
-1 is when the average price goes up from the previous interval and 0 is when the average price goes down from the previous one minute interval.
 
+-----------------------------------------------------------------------------------------
+How label is derived?
+-----------------------------------------------------------------------------------------
+I am representing the movement of the label by integers - 1 and 0. 
+I am tracking the average bid price and ask price in each minute interval.
+Whenever average bid price in the current interval goes up from the average bid price of the previous interval, I mark the label as 1.
+Whenever average bid price in the current interval goes down from the average bid price of the previous interval, I mark the label as 0.
+
+I am doing the same thing with average ask price also.
+Whenever average ask price in the current interval goes up from the average ask price of the previous interval, I mark the label as 1.
+Whenever average ask price in the current interval goes down from the average ask price of the previous interval, I mark the label as 0.
 
