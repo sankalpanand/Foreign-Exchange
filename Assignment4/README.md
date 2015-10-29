@@ -1,5 +1,5 @@
 References:
 
-The generation of Random Forest is inspired from the tutorial below. 
-It has been modified to fit the Foreign Exchange data set.
-https://github.com/ironmanMA/Random-Forest
+1. https://academy.datastax.com/demos/getting-started-apache-cassandra-and-java-part-i
+2. http://www.tutorialspoint.com/cassandra/cassandra_read_data.htm
+
