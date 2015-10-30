@@ -1,4 +1,4 @@
-
+package Assignment4;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,8 +24,11 @@ public class MainRun
 //		String traindata = "/home/sankalp/workspace/BigDataAnalytics/src/KDDTrainSmall.txt";
 //		String testdata = "/home/sankalp/workspace/BigDataAnalytics/src/KDDTestSmall.txt";
 		
-		String traindata = "/home/sankalp/Downloads/OneDrive-2015-10-28/input.csv";
-		String testdata = "/home/sankalp/Downloads/OneDrive-2015-10-28/output.csv";
+		//String traindata = "/home/sankalp/Downloads/OneDrive-2015-10-28/input.csv";
+//		String testdata = "/home/sankalp/Downloads/OneDrive-2015-10-28/output.csv";
+		
+		// String traindata = "/media/sankalp/Documents/Carnegie Mellon University/Sem 4/Big Data Analytics/train_small2";
+		// String testdata = "/media/sankalp/Documents/Carnegie Mellon University/Sem 4/Big Data Analytics/test_small2";
 		
 		int numTrees=10;
 		int numThreads=1;
@@ -35,16 +38,25 @@ public class MainRun
 		// This is the pattern of my raw data files.
 		// The pattern given below means the first column is Nominal, then next three are categorical, then next 2 are nominal
 		// String inputDataLayout= "N,3,C,2,N,C,4,N,C,8,N,2,C,19,N,L,I";
-		String inputDataLayout= "I,C,9,N,L,I";
+		
+		// For text file
+		String inputDataLayout = "I,C,9,N,L,I";
+		
+		// For cassandra table
+		// String inputDataLayout= "C,I,3,N,L,I,6,N";
 
 		
 		// Step 1- Start preparing data from the files to Decision Trees. Instantiate a class that has methods for this purpose. 
-		DescribeTrees DT = new DescribeTrees(traindata, inputDataLayout);
+		DescribeTrees DT = new DescribeTrees();
 		
 		// Step 2- Generate training and testing data with the help of above class
-		ArrayList<ArrayList<String>> trainDataInstances = DT.prepareInputData("forex", inputDataLayout);
-		ArrayList<ArrayList<String>> testDataList = DT.prepareInputData("forex", inputDataLayout);
-
+		ArrayList<ArrayList<String>> trainDataInstances = DT.prepareInputDataFromCassandra("forex_train", inputDataLayout);
+		//ArrayList<ArrayList<String>> trainDataInstances = DT.prepareInputDataFromRawFile(traindata, inputDataLayout);
+		// System.out.println("Done reading training data...");
+		
+		ArrayList<ArrayList<String>> testDataList = DT.prepareInputDataFromCassandra("forex_test", inputDataLayout);
+		//ArrayList<ArrayList<String>> testDataList = DT.prepareInputDataFromRawFile(testdata, inputDataLayout);
+		// System.out.println("Done reading testing data...");
 
 		// Step 3- Create frequency table of how many times each label appeared
 		HashMap<String, Integer> labelFreq = new HashMap<String, Integer>();
@@ -114,14 +126,12 @@ public class MainRun
 		Cluster cluster;
 		Session session;
 		
-		// Connect to the cluster and keyspace "demo"
 		cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
-		session = cluster.connect("mykeyspace");
-		
 		
 		
 		for(ArrayList<String> training : result.keySet())
 		{
+			session = cluster.connect("mykeyspace");
 			String pred = training.get(training.size()-1);
 			String actual = result.get(training);
 			String timestamp = training.get(0);

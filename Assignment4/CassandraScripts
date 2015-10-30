@@ -1,0 +1,42 @@
+--------------------------------------------------------------------------
+Create table
+--------------------------------------------------------------------------
+
+CREATE KEYSPACE mykeyspace
+WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+
+USE mykeyspace;
+
+
+CREATE TABLE forex_test (
+  currency text,
+timestamp text PRIMARY KEY,
+minBid text,
+  maxBid text,
+  avgBid text,
+
+  minAsk text,
+  maxAsk text,
+  avgAsk text,
+
+  minDelta text,
+  maxDelta text,
+  avgDelta text,
+bidDir text,
+askDir text );
+
+
+CREATE TABLE predictions(
+timestamp text PRIMARY KEY,
+predicted text,
+actual text);
+
+
+--------------------------------------------------------------------------
+Bulk copy from CSV
+--------------------------------------------------------------------------
+
+Copy from CSV:
+COPY mykeyspace.forex_train (currency,timestamp,minBid,maxBid,avgBid,minAsk,maxAsk,avgAsk,minDelta,maxDelta,avgDelta,bidDir,AskDir) FROM '/media/sankalp/Documents/Carnegie Mellon University/Sem 4/Big Data Analytics/train';
+
+COPY mykeyspace.forex_test (currency,timestamp,minBid,maxBid,avgBid,minAsk,maxAsk,avgAsk,minDelta,maxDelta,avgDelta,bidDir,AskDir) FROM '/media/sankalp/Documents/Carnegie Mellon University/Sem 4/Big Data Analytics/test';

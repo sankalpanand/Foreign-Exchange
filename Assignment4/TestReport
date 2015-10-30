@@ -1,0 +1,25 @@
+Random-Forest generation starts...
+Final Data Layout Parameters [C, N, N, N, N, N, N, N, N, N, L]
+Number of trees to be created in this random forest: 10
+Total training data size is: 105769
+Total test data size is: 17769
+Total number of features: 10
+Total number of features to be selected: 3
+Forest initialized...
+Forest generation starting...
+Number of threads started :1
+Trees generation completed in 0hr 7m 6.601sec
+
+Testing Forest for Accuracy with threads...
+Testing Complete...
+Forest Accuracy is: 76%
+Time taken for tests: 0hr 0m 0.625sec
+
+Oct 30, 2015 12:06:20 AM com.datastax.driver.core.NettyUtil <clinit>
+INFO: Found Netty's native epoll transport in the classpath, using it
+Oct 30, 2015 12:06:21 AM com.datastax.driver.core.policies.DCAwareRoundRobinPolicy init
+INFO: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+Oct 30, 2015 12:06:21 AM com.datastax.driver.core.Cluster$Manager init
+INFO: New Cassandra host /127.0.0.1:9042 added
+
+Done

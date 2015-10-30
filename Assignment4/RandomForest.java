@@ -1,4 +1,4 @@
-
+package Assignment4;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -348,7 +348,8 @@ public class RandomForest {
 		/** Creates the decision tree */
 		public void run() 
 		{
-			treeCollection.add(new DecisionTree(trainDataInstances, forest, treeNum));
+			DecisionTree tree = new DecisionTree(trainDataInstances, forest, treeNum);
+			treeCollection.add(tree);
 			progress = progress + update;
 		}
 	}
@@ -390,7 +391,7 @@ public class RandomForest {
 			String finalClass = ModeofList(predictions);
 			
 			// Check if it predicts correctly or not. This will be used to calculate accuracy.
-			if(finalClass.equalsIgnoreCase(instance.get(M)))
+			if(finalClass!= null && finalClass.equalsIgnoreCase(instance.get(M)))
 				correctPredictions++;
 			
 			

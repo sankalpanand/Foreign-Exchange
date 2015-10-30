@@ -1,4 +1,4 @@
-
+package Assignment4;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,14 +14,7 @@ public class DescribeTrees
 {
 	//method to take the txt fle as input and pass those values to random forests
 	BufferedReader BR = null;
-	String path;
-	String layout;
-
-	public DescribeTrees(String path, String layout)
-	{
-		this.path=path;
-		this.layout = layout;
-	}
+	
 	
 	public ArrayList<ArrayList<String>> readFromCassandra(String tableName)
 	{
@@ -33,10 +26,12 @@ public class DescribeTrees
 		Session session = cluster.connect("mykeyspace");
 		
 		// Use select to get the user we just entered
-		String query = "SELECT * FROM " + tableName + ";";
+		String query = "SELECT * FROM " + tableName + " LIMIT 100;";
+		System.out.println(query);
 		ResultSet results = session.execute(query);
 		for (Row row : results)
 		{
+			// System.out.println(row);
 			ArrayList<String> singleInstanceData = new ArrayList<String>();
 			singleInstanceData.add(row.getString("currency"));
 			singleInstanceData.add(row.getString("timestamp"));
@@ -61,9 +56,54 @@ public class DescribeTrees
 		
 		return allInstanceData;
 	}
+	
+	
+	public ArrayList<ArrayList<String>> readFromFile(String filePath)
+	{
+		
+		ArrayList<ArrayList<String>> allInstanceData = new ArrayList<ArrayList<String>>();
+
+		try 
+		{
+			String sCurrentLine;
+			BR = new BufferedReader(new FileReader(filePath));
+
+			while ((sCurrentLine = BR.readLine()) != null) 
+			{
+				// This assumes that the file is a valid CSV
+				if(sCurrentLine!=null)
+				{
+					String[] attributes = sCurrentLine.split(",");
+					ArrayList<String> singleInstanceData =new ArrayList<String>();
+					for(String attribute : attributes)
+						singleInstanceData.add(attribute);
+
+					allInstanceData.add(singleInstanceData);
+				}
+			}
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			try 
+			{
+				if (BR != null)
+					BR.close();
+			} 
+			catch (IOException ex) 
+			{
+				ex.printStackTrace();
+			}
+		}		
+		
+		return allInstanceData;
+	}
 
 	// This method 
-	public ArrayList<ArrayList<String>> prepareInputData(String tableName, String layout)
+	public ArrayList<ArrayList<String>> prepareInputDataFromCassandra(String tableName, String layout)
 	{
 		ArrayList<ArrayList<String>> allInstanceData = readFromCassandra(tableName);
 
@@ -119,6 +159,65 @@ public class DescribeTrees
 
 		return allInstanceData;
 	}
+	
+	
+	// This method 
+		public ArrayList<ArrayList<String>> prepareInputDataFromRawFile(String filePath, String layout)
+		{
+			ArrayList<ArrayList<String>> allInstanceData = readFromFile(filePath);
+
+			// Verify the layout of the file- Check the number of layout parameters with the given in the input file 
+			char[] inputDataLayout = CreateLayout(layout);
+			if(inputDataLayout.length != allInstanceData.get(0).size())
+			{
+				System.out.print("Data Layout is incorrect. Parameter length given- "+ inputDataLayout.length + " but data length read- " + allInstanceData.get(0).size());
+				return null;
+			}
+
+			/* Data file cleaning takes place here */
+			/* 1- Remove ignored features from the data set */
+			/* 2- Move single label to the end */
+
+			// Create an array list out of all the characters in the layout
+			ArrayList<Character> listDataLayout  = new ArrayList<Character>();
+			for(char c: inputDataLayout)
+				listDataLayout.add(c);
+
+			// If an i'th character is to be ignored, we should remove it from our allInstanceData as well.
+			for(int i=0; i< listDataLayout.size();i++)
+			{
+				if(listDataLayout.get(i)=='I')
+				{
+					// Remove it from the arraylist
+					listDataLayout.remove(i);
+
+					// Also remove its value from all the instances
+					for(ArrayList<String> singleInstanceData : allInstanceData)
+						singleInstanceData.remove(i);
+
+					i=i-1;
+				}
+			}
+
+			// If any labels are coming in between, move them to the last
+			for(int i=0; i< listDataLayout.size(); i++)
+			{
+				if( listDataLayout.get(i)=='L')
+				{
+					for(ArrayList<String> singleInstanceData : allInstanceData)
+					{
+						// Swap this labels position with the last position
+						String swap = singleInstanceData.get(i);
+						singleInstanceData.set(i, singleInstanceData.get(singleInstanceData.size()-1));
+						singleInstanceData.set(singleInstanceData.size()-1, swap);
+					}
+				}
+
+				break;
+			}
+
+			return allInstanceData;
+		}
 
 	/**
 	 * Breaks the run length code for data layout
