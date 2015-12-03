@@ -1,1 +1,1 @@
-This presentation elaborates the reflection for the Foreign Exchange Project. I will explain what all things I tried, what worked for me and what didn't. Later, I will explain how do I plan to extend this project or bring improvements to it.
+This presentation elaborates the reflection for the Foreign Exchange Project. I will explain what all things I tried, what worked for me and what didn't. Later, I will explain how do I plan to extend this project and bring improvements to it.
